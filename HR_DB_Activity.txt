@@ -1,0 +1,122 @@
+1. Write a query to display the names (first_name, last_name) using alias name "First_Name", "Last_Name" from employees Table, order by first name.
+SELECT first_name AS First_Name,last_name AS Last_Name FROM employees
+ORDER BY 1 
+
+====================================================================================================================================================
+
+2. Write a query to get unique department ID from employee Table.
+SELECT DISTINCT department_id FROM employees
+
+====================================================================================================================================================
+
+3. Write a query to get the names (first_name, last_name), salary, TAX of all the employees (TAX is calculated as 10% of salary), order by higher TAX values 1st.
+
+SELECT first_name,last_name,salary,(0.1*salary) AS TAX 
+FROM employees
+order by 3 DESC
+====================================================================================================================================================
+
+4. Write a query to display the names (first_name, last_name) & department ID of all employees in departments 30 or 100 in ascending order by department ID.
+SELECT first_name,last_name,department_id FROM employees
+WHERE department_id=30 or department_id=100
+ORDER BY 3 
+
+=======================================================================================================================================================
+
+5. Write a query to display the last name, job, and salary for all employees whose job is that of a Programmer or a Shipping Clerk, and whose salary is not equal to $4,500, $10,000, or $15,000.
+
+SELECT last_name,job_title,salary from employees
+JOIN jobs ON employees.job_id=jobs.job_id
+WHERE job_title= 'Programmer' or job_title='Shipping Clerk' and 
+salary NOT IN (4500,10000,15000)
+======================================================================================================================================================
+
+6. Write a query to list the number of unique jobs available in the employees table.
+
+SELECT DISTINCT job_title,count (*) from employees
+JOIN jobs ON employees.job_id=jobs.job_id
+GROUP BY 1 
+======================================================================================================================================================
+
+7. Write a query to get the maximum salary from employees table with their job & department.
+SELECT job_title,depart_name, MAX(Salary) FROM employees
+JOIN jobs on employees.job_id=jobs.job_id
+JOIN departments on departments.department_id=employees.department_id
+GROUP by 1,2
+======================================================================================================================================================
+
+8. Write a query to get the maximum salary for IT programmers.
+
+SELECT MAX(SALARY),job_title FROM jobs
+join employees on employees.job_id=jobs.job_id
+WHERE jobs.job_id='IT_PROG'
+GROUP BY 2 
+=====================================================================================================================================================
+
+9. Write a query to get the average salary, number of employees in each department.
+SELECT departments.depart_name,AVG(salary),count(*) FROM departments
+JOIN employees
+ON employees.department_id=departments.department_id
+GROUP BY 1
+
+=====================================================================================================================================================
+
+10. Write a query to get the average salary, number of employees in each department combined with the name of each department, order by total number of emplyees in each dep.
+SELECT departments.depart_name,avg(employees.salary) AS AverageSalary,count(employees.employee_id) AS NumbeOfEmployees FROM
+employees
+JOIN departments ON employees.department_id=departments.department_id
+GROUP BY 1 
+ORDER BY 3
+
+=======================================================================================================================================================
+
+11. Write a query to find the employee id, emplyee name (fisrt & last) along with their manager_id, manager name (fisrt & last).
+SELECT employee_id,first_name||' '||last_name AS EmployeeName, manager_id,
+( SELECT first_name||' '||last_name FROM employees e2 WHERE e1.manager_id=e2.employee_id) AS ManagerName
+FROM employees e1
+
+
+=========================================================================================================================================================
+
+12. Write a query to find the names (first_name, last_name) of all employees who works in the IT department.
+SELECT first_name,last_name from employees
+JOIN departments
+ON departments.department_id=employees.department_id
+WHERE departments.depart_name='IT'
+
+
+==============================================================================================================================================================
+
+13. Write a query to find the names (first_name, last_name) and salaries of the employees who have a higher salary than Max salary of programmers.
+
+SELECT employees.first_name||' '||employees.last_name AS fullName,employees.salary
+FROM employees
+JOIN jobs on employees.job_id=jobs.job_id
+WHERE employees.salary > (SELECT max_salary FROM jobs WHERE job_title='Programmer')
+==================================================================================================================================================================
+
+14. Write a query to find the names (first_name, last_name), salaries of the employees along with department avrg salary.
+WITH table1 AS(SELECT department.department_id,department.department_name, AVG(employees.salary) AS AverageSalary
+FROM employees JOIN department on department.department_id=employees.department_id
+GROUP BY 1,2)
+
+SELECT employees.first_name||' '||employees.last_name AS fullName,employees.salary,table1.AverageSalary FROM employees
+JOIN table1 on employees.department_id=table1.department_id
+
+===================================================================================================================================================================
+
+15. Write a query to find the names (first_name, last_name), salaries of the employees along with MAX salary & difference column (salary- max salary).
+SELECT employees.first_name||' '|| employees. last_name AS Name,employees.salary,jobs.max_salary,
+jobs.max_salary-employees.salary AS SalaryDifference
+FROM employees
+JOIN jobs on employees.job_id=jobs.job_id
+
+=====================================================================================================================================================================
+
+16. Write a query to find the names (first_name, last_name), salaries of the employees along with MAX salary in their department & difference column (salary- max department salary).
+SELECT employees.first_name||' '|| employees. last_name AS Name,employees.salary,jobs.max_salary,
+jobs.max_salary-employees.salary AS SalaryDifference
+FROM employees
+JOIN jobs on employees.job_id=jobs.job_id
+=====================================================================================================================================================================
+
